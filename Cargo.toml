@@ -7,3 +7,10 @@ edition = "2021"
 
 [dependencies]
 hecs = "0.7"
+
+[dev-dependencies]
+criterion = "0.3"
+
+[[bench]]
+name = "tracked_vs_untracked"
+harness = false

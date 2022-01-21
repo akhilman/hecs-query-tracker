@@ -62,12 +62,15 @@ where
     QueryItem<'q, Q>: TrackableRef<'q>,
 {
     type Item = (Entity, <QueryItem<'q, Q> as TrackableRef<'q>>::Tracked);
+
+    #[inline]
     fn next(&mut self) -> Option<Self::Item> {
         self.inner
             .next()
             .map(|(entity, components)| (entity, components.into_tracked(self.changes)))
     }
 
+    #[inline]
     fn size_hint(&self) -> (usize, Option<usize>) {
         self.inner.size_hint()
     }
@@ -78,6 +81,7 @@ where
     Q: Query,
     QueryItem<'q, Q>: TrackableRef<'q>,
 {
+    #[inline]
     fn len(&self) -> usize {
         self.inner.len()
     }

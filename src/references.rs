@@ -8,14 +8,17 @@ where
 {
     type Tracked = TrackedRef<'a, T>;
 
+    #[inline]
     fn count_types() -> usize {
         1
     }
 
+    #[inline]
     fn for_each_type(mut f: impl FnMut(TypeId, bool)) {
         f(TypeId::of::<T>(), false);
     }
 
+    #[inline]
     fn into_tracked(self, changes: &'a Changes) -> Self::Tracked {
         TrackedRef::new(self, changes)
     }
@@ -27,14 +30,17 @@ where
 {
     type Tracked = TrackedMut<'a, T>;
 
+    #[inline]
     fn count_types() -> usize {
         1
     }
 
+    #[inline]
     fn for_each_type(mut f: impl FnMut(TypeId, bool)) {
         f(TypeId::of::<T>(), true);
     }
 
+    #[inline]
     fn into_tracked(self, changes: &'a Changes) -> Self::Tracked {
         TrackedMut::new(self, changes)
     }
@@ -52,9 +58,11 @@ impl<'a, T> TrackedRef<'a, T>
 where
     T: 'static,
 {
+    #[inline]
     fn new(value: &'a T, changes: &'a Changes) -> Self {
         Self { value, changes }
     }
+    #[inline]
     pub fn set_mutated(&self) {
         self.changes.set_changed(TypeId::of::<T>())
     }
@@ -75,6 +83,7 @@ where
     fn new(value: &'a mut T, changes: &'a Changes) -> Self {
         Self { value, changes }
     }
+    #[inline]
     pub fn set_mutated(&self) {
         self.changes.set_changed(TypeId::of::<T>())
     }
