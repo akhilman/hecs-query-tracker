@@ -8,7 +8,7 @@ fn main() {
 
     let changes = Changes::new_for::<(&i32, &u32)>();
 
-    <(&'static mut i32, &'static mut u32)>::track(&changes)
+    <(&mut i32, &mut u32)>::track(&changes)
         .query(&world)
         .iter()
         .for_each(|(_, (mut a, b))| *a = *b as i32);
