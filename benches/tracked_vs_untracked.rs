@@ -39,25 +39,24 @@ pub fn tracked_vs_untracked(c: &mut Criterion) {
 
     let changes = Changes::new_for::<(&u64, &u32)>();
 
-    for count in [10, 100, 1000, 10000] {
-        let mut world = World::default();
-        for n in 1..=count {
-            world.spawn((n as u64, n as u32 + 1));
-        }
-        group.bench_function(BenchmarkId::new("Untracked compare", count), |b| {
-            b.iter(|| bench_compare_untracked(&world))
-        });
-        group.bench_function(BenchmarkId::new("Tracked compare", count), |b| {
-            b.iter(|| bench_compare_tracked(&world, &changes))
-        });
-
-        group.bench_function(BenchmarkId::new("Untracked copy", count), |b| {
-            b.iter(|| bench_copy_untracked(&world))
-        });
-        group.bench_function(BenchmarkId::new("Tracked copy", count), |b| {
-            b.iter(|| bench_copy_tracked(&world, &changes))
-        });
+    let count = 100;
+    let mut world = World::default();
+    for n in 1..=count {
+        world.spawn((n as u64, n as u32 + 1));
     }
+    group.bench_function(BenchmarkId::new("Untracked read", count), |b| {
+        b.iter(|| bench_compare_untracked(&world))
+    });
+    group.bench_function(BenchmarkId::new("Tracked read", count), |b| {
+        b.iter(|| bench_compare_tracked(&world, &changes))
+    });
+
+    group.bench_function(BenchmarkId::new("Untracked read/write", count), |b| {
+        b.iter(|| bench_copy_untracked(&world))
+    });
+    group.bench_function(BenchmarkId::new("Tracked read/write", count), |b| {
+        b.iter(|| bench_copy_tracked(&world, &changes))
+    });
 }
 
 criterion_group!(benches, tracked_vs_untracked);
