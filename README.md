@@ -34,7 +34,7 @@ fn main() {
 ## Benchmark
 
 100 entities with 2 components and two tests:
-* Read - Compare components;
+* Read - compare components;
 * Read/write - copy second component value to first one.
 
 ![Benchmark](benchmark.svg)
