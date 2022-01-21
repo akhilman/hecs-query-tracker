@@ -11,8 +11,7 @@ fn bench_compare_untracked(world: &World) {
         });
 }
 
-fn bench_compare_tracked(world: &World) {
-    let changes = Changes::new_for::<(&u64, &u32)>();
+fn bench_compare_tracked(world: &World, changes: &Changes) {
     <(&mut u64, &mut u32)>::track(&changes)
         .query(&world)
         .iter()
@@ -28,8 +27,7 @@ fn bench_copy_untracked(world: &World) {
         .for_each(|(_, (a, b))| *a = *b as u64);
 }
 
-fn bench_copy_tracked(world: &World) {
-    let changes = Changes::new_for::<(&u64, &u32)>();
+fn bench_copy_tracked(world: &World, changes: &Changes) {
     <(&mut u64, &mut u32)>::track(&changes)
         .query(&world)
         .iter()
@@ -38,6 +36,8 @@ fn bench_copy_tracked(world: &World) {
 
 pub fn tracked_vs_untracked(c: &mut Criterion) {
     let mut group = c.benchmark_group("Tracked vs untracked");
+
+    let changes = Changes::new_for::<(&u64, &u32)>();
 
     for count in [10, 100, 1000, 10000] {
         let mut world = World::default();
@@ -48,14 +48,14 @@ pub fn tracked_vs_untracked(c: &mut Criterion) {
             b.iter(|| bench_compare_untracked(&world))
         });
         group.bench_function(BenchmarkId::new("Tracked compare", count), |b| {
-            b.iter(|| bench_compare_tracked(&world))
+            b.iter(|| bench_compare_tracked(&world, &changes))
         });
 
         group.bench_function(BenchmarkId::new("Untracked copy", count), |b| {
             b.iter(|| bench_copy_untracked(&world))
         });
         group.bench_function(BenchmarkId::new("Tracked copy", count), |b| {
-            b.iter(|| bench_copy_tracked(&world))
+            b.iter(|| bench_copy_tracked(&world, &changes))
         });
     }
 }
