@@ -1,4 +1,5 @@
 use core::any::TypeId;
+
 pub trait TrackableRef<'a> {
     type Tracked: 'a;
 
@@ -33,4 +34,5 @@ mod references;
 mod tuples;
 
 pub use changes::Changes;
+pub use query::{TrackableQuery, TrackedQueryBorrow, TrackedQueryBuilder, TrackedQueryIter};
 pub use references::{TrackedMut, TrackedRef};

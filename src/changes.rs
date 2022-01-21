@@ -11,18 +11,18 @@ pub struct Changes {
 }
 
 impl Changes {
-    pub(crate) fn new() -> Self {
+    pub fn new() -> Self {
         Self {
             changes: BTreeMap::new(),
         }
     }
-    pub(crate) fn new_for<'a, T: TrackableRef<'a>>() -> Self {
+    pub fn new_for<'a, T: TrackableRef<'a>>() -> Self {
         let mut changes = Self::new();
         T::for_each_type(|t, _| changes.reserve(t));
         changes
     }
 
-    pub(crate) fn reserve(&mut self, type_id: TypeId) {
+    pub fn reserve(&mut self, type_id: TypeId) {
         use std::collections::btree_map::Entry;
         match self.changes.entry(type_id) {
             Entry::Vacant(entry) => {
